@@ -25,7 +25,7 @@ IMAGE_DIR = 'sample_images'
 os.makedirs(IMAGE_DIR, exist_ok=True)
 
 # CSV file path
-CSV_FILE = "../scrapper/memes_posts.csv"
+CSV_FILE = "../scraper/memes_posts.csv"
 
 
 # Resize and save the images from url column
