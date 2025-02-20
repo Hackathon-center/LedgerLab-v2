@@ -7,6 +7,18 @@ from PIL import Image
 import shutil
 from io import BytesIO
 
+def clean_directory(directory):
+    """Remove all files in the specified directory"""
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print(f'Failed to delete {file_path}. Reason: {e}')
+
 class MemeMonitor:
     def __init__(self, 
                 min_upvotes: int = 10000,    
@@ -44,7 +56,6 @@ class MemeMonitor:
         metadata = {
             'title': post['title'],
             'image_url': post['url'],
-            'created_at': str(post['created_utc']),
             'upvotes': post['ups'],
             'comments': post['num_comments'],
             'reddit_permalink': post['permalink']
@@ -89,12 +100,11 @@ def process_popular_memes(df: pd.DataFrame):
     """Find popular memes and save their images"""
     POPULAR_MEMES_DIR = 'popular_meme_images'
     
-    # Empty the directory if it exists
+    # Create directory for popular meme images if it doesn't exist
     if os.path.exists(POPULAR_MEMES_DIR):
-        shutil.rmtree(POPULAR_MEMES_DIR)
-        
-    # Create directory for popular meme images
-    os.makedirs(POPULAR_MEMES_DIR)
+        clean_directory(POPULAR_MEMES_DIR)
+    else:
+        os.makedirs(POPULAR_MEMES_DIR)
     
     # Find popular memes
     monitor = MemeMonitor()
@@ -105,7 +115,6 @@ def process_popular_memes(df: pd.DataFrame):
         post_dict = row.to_dict()
         if monitor.is_popular(post_dict):
             meme_data = monitor.prepare_meme_data(post_dict)
-            popular_memes.append(meme_data)
             
             # Download and save the image
             url = meme_data['image_url']
@@ -120,8 +129,12 @@ def process_popular_memes(df: pd.DataFrame):
                     print(f"Upvotes: {meme_data['upvotes']}, Comments: {meme_data['comments']}")
                 else:
                     print(f"Failed to download popular meme: {url}")
+                    continue
             else:
                 print(f"Popular meme image already exists: {save_path}")
+            
+            meme_data['local_image_path'] = save_path
+            popular_memes.append(meme_data)
     
     print(f"Found and processed {len(popular_memes)} popular memes")
     return popular_memes
