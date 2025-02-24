@@ -136,15 +136,6 @@ def process_memes_with_metadata(df):
             else:
                 print(f"Failed to save metadata for: {base_filename}")
     
-    # Save summary of all processed memes
-    summary_path = os.path.join(METADATA_DIR, 'processed_memes_summary.json')
-    try:
-        with open(summary_path, 'w') as f:
-            json.dump(processed_memes, f, indent=4)
-        print(f"Saved summary to: {summary_path}")
-    except Exception as e:
-        print(f"Error saving summary: {e}")
-    
     return processed_memes
 
 
