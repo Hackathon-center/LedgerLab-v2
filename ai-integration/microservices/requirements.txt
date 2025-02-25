@@ -13,4 +13,3 @@ schedule
 watchdog
 asyncio
 shutil
-opencv-python
