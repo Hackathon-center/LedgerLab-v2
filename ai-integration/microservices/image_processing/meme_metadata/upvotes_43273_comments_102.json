@@ -5,7 +5,7 @@
     "reddit_permalink": "N/A",
     "image_url": "https://i.redd.it/8ikrpwza6uje1.png",
     "local_image_path": "popular_meme_images\\upvotes_43273_comments_102.jpg",
-    "extracted_text": "[original] 2015 2025 MY PROBLEMS ME ME MY PROBLEMS 2015 2025 MY PROBLEMS ME ME MY PROBLEMS | [contrast] 2015 2025 MY PROBLEMS MY PROBLEMS (mgflp com 2015 2025 MY PROBLEMS MY PROBLEMS (mgflp com | [inverted] 2015 2025 MY PROBLEMS ME ME MY PROBLEMS com 2015 2025 MY PROBLEMS ME ME MY PROBLEMS com | [threshold] 2015 2025 MY PROBLEMS MY PROBLEMS 2015 2025 MY PROBLEMS MY PROBLEMS",
+    "extracted_text": "2015 2025 MY PROBLEMS ME ME MY PROBLEMS",
     "image_labels": [
         "Animal",
         "Canine",
@@ -16,7 +16,5 @@
         "Screen",
         "Terrier"
     ],
-    "processed_at": "2025-02-25T04:29:17.839135+00:00",
-    "text_removed_path": "memes_no_text\\upvotes_43273_comments_102_text_removed.jpg",
-    "cartoonify_path": "memes_cartoonified\\cartoon_upvotes_43273_comments_102_text_removed.jpg"
+    "processed_at": "2025-02-25T04:48:17.948450+00:00"
 }

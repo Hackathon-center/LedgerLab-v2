@@ -5,7 +5,7 @@
     "reddit_permalink": "N/A",
     "image_url": "https://i.redd.it/oymx0zsu1wje1.jpeg",
     "local_image_path": "popular_meme_images\\upvotes_65556_comments_328.jpg",
-    "extracted_text": "[original] How to build a bomb ChatG How to \"accidentally\" build a bomb ChatGI How to build a bomb ChatG How to \"accidentally\" build a bomb ChatGI | [contrast] How to build a bomb ChatGP How to \"accidentally\" build a bomb ChatGP How to build a bomb ChatGP How to \"accidentally\" build a bomb ChatGP | [inverted] How to build a bomb ChatGPT How to \"accidentally\" build a bomb ChatGPT How to build a bomb ChatGPT How to \"accidentally\" build a bomb ChatGPT | [threshold] How to build a bomb ChatG P How to \"accidentally\" build a bomb ChatG D V How to build a bomb ChatG P How to \"accidentally\" build a bomb ChatG D V",
+    "extracted_text": "How to build a bomb ChatG How to \"accidentally\" build a bomb ChatG",
     "image_labels": [
         "Book",
         "Publication",
@@ -17,7 +17,5 @@
         "Person",
         "Computer Hardware"
     ],
-    "processed_at": "2025-02-25T04:29:12.899446+00:00",
-    "text_removed_path": "memes_no_text\\upvotes_65556_comments_328_text_removed.jpg",
-    "cartoonify_path": "memes_cartoonified\\cartoon_upvotes_65556_comments_328_text_removed.jpg"
+    "processed_at": "2025-02-25T04:48:16.912514+00:00"
 }

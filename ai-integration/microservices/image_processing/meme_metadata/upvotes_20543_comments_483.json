@@ -5,7 +5,7 @@
     "reddit_permalink": "N/A",
     "image_url": "https://i.redd.it/gfdo53hn66ke1.jpeg",
     "local_image_path": "popular_meme_images\\upvotes_20543_comments_483.jpg",
-    "extracted_text": "[original] My teeth Teeth of a mf that lived 10000 years ago. My teeth Teeth of a mf that lived 10000 years ago. | [contrast] y teeth eeth of a mf at lived 10000 ears ago. y teeth eeth of a mf at lived 10000 ears ago. | [inverted] My teeth Teeth of a mf that lived 10000 years ago. My teeth Teeth of a mf that lived 10000 years ago. | [threshold] My teeth Teeth of a mf that lived 10000 years ago. My teeth Teeth of a mf that lived 10000 years ago.",
+    "extracted_text": "My teeth Teeth of a mf that lived 10000 years ago.",
     "image_labels": [
         "Body Part",
         "Mouth",
@@ -14,7 +14,5 @@
         "Head",
         "Face"
     ],
-    "processed_at": "2025-02-25T04:28:57.919707+00:00",
-    "text_removed_path": "memes_no_text\\upvotes_20543_comments_483_text_removed.jpg",
-    "cartoonify_path": "memes_cartoonified\\cartoon_upvotes_20543_comments_483_text_removed.jpg"
+    "processed_at": "2025-02-25T04:48:12.366176+00:00"
 }
