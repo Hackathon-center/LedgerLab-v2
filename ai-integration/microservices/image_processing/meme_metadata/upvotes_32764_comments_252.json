@@ -15,5 +15,8 @@
         "Neighborhood",
         "Tar"
     ],
-    "processed_at": "2025-02-25T04:48:13.664095+00:00"
+    "processed_at": "2025-02-25T15:21:42.039522+00:00",
+    "ipfs_image_cid": "QmabDJeFcJJyrrTyLcZ4Viu417hUQirqrLWkiaAEvZ1Hfc",
+    "ipfs_metadata_cid": "QmUerAJbD7bmp1tD8dKQ22dWCANzYiQzyn9LAjVWUQjxDY",
+    "ipfs_image_url": "ipfs://QmabDJeFcJJyrrTyLcZ4Viu417hUQirqrLWkiaAEvZ1Hfc"
 }

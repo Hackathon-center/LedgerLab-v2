@@ -16,5 +16,8 @@
         "Male",
         "Man"
     ],
-    "processed_at": "2025-02-25T04:48:15.347578+00:00"
+    "processed_at": "2025-02-25T15:21:49.924248+00:00",
+    "ipfs_image_cid": "QmUNEucvfLQJ4G1UZfPyaAehhZk8zxDBfgfrpn6kVLkNXx",
+    "ipfs_metadata_cid": "Qmd4CUpri2txtWK6kHkTzNCt23THuhnrenn9LjceJabDJE",
+    "ipfs_image_url": "ipfs://QmUNEucvfLQJ4G1UZfPyaAehhZk8zxDBfgfrpn6kVLkNXx"
 }
