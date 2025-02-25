@@ -12,6 +12,7 @@ from PIL import Image
 from io import BytesIO
 import shutil
 from dotenv import load_dotenv
+from ipfs_uploader import upload_to_ipfs
 
 # Load .env file
 load_dotenv()
@@ -134,6 +135,25 @@ def process_memes_with_metadata(df):
             # See if metadata is successfully processed & saved
             if save_metadata(metadata, metadata_path):
                 print(f"Successfully processed meme and saved metadata: {base_filename}")
+                
+                # Upload to IPFS
+                print(f"Uploading to IPFS: {base_filename}")
+                ipfs_result = upload_to_ipfs(metadata)
+                
+                if ipfs_result["success"]:
+                    print(f"Successfully uploaded to IPFS: {base_filename}")
+                    
+                    # Add IPFS data to metadata
+                    metadata["ipfs_image_cid"] = ipfs_result["image_cid"]
+                    metadata["ipfs_metadata_cid"] = ipfs_result["metadata_cid"]
+                    metadata["ipfs_image_url"] = f"ipfs://{ipfs_result['image_cid']}"
+                    
+                    # Save updated metadata with IPFS info
+                    save_metadata(metadata, metadata_path)
+                else:
+                    print(f"Failed to upload to IPFS: {base_filename}")
+                
+                
                 processed_memes.append(metadata)
             else:
                 print(f"Failed to save metadata for: {base_filename}")
