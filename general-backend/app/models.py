@@ -12,6 +12,7 @@ class Meme(db.Model):
     title = db.Column(db.String, nullable=False)
     trend_score = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.timestamp)
+    CID = db.Column(db.String, nullable=False)
 
 class Tokens(db.Model):
     id = db.Column(db.Integer, primary_key=True)
