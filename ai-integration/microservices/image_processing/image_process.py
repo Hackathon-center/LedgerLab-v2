@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from mint_criteria import process_popular_memes, clean_directory
+from text_removal import remove_text_from_meme
 import requests
 from PIL import Image
 from io import BytesIO
@@ -97,12 +98,19 @@ def save_metadata(metadata, save_path):
 def process_memes_with_metadata(df):
     """Process popular memes and extract metadata"""
     METADATA_DIR = 'meme_metadata'
+    TEXT_REMOVED_DIR = 'memes_no_text'
     
     # Create directory for metadata if it doesn't exist
     if os.path.exists(METADATA_DIR):
         clean_directory(METADATA_DIR)
     else:
         os.makedirs(METADATA_DIR)
+        
+    # Create directory for text-removed images
+    if os.path.exists(TEXT_REMOVED_DIR):
+        clean_directory(TEXT_REMOVED_DIR)
+    else:
+        os.makedirs(TEXT_REMOVED_DIR)
     
     # Get popular memes
     popular_memes = process_popular_memes(df)
@@ -130,6 +138,21 @@ def process_memes_with_metadata(df):
                 image_labels=image_labels
             )
             
+            # Continue if text is present
+            if extracted_text:
+                try:
+                    # Call the remove_text_from_meme function
+                    text_removed_path = remove_text_from_meme(image_path, metadata, output_dir=TEXT_REMOVED_DIR)
+                    if text_removed_path:
+                        # Update metadata with text-removed path
+                        metadata['text_removed_path'] = text_removed_path
+                        print(f"Successfully removed text from: {base_filename}")
+                except Exception as e:
+                    metadata['text_removed_path'] = None
+            else:
+                metadata['text_removed_path'] = None
+            
+            # See if metadata is successfully processed & saved
             if save_metadata(metadata, metadata_path):
                 print(f"Successfully processed meme and saved metadata: {base_filename}")
                 processed_memes.append(metadata)

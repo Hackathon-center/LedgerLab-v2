@@ -5,7 +5,7 @@
     "reddit_permalink": "N/A",
     "image_url": "https://i.redd.it/203oeoc730ke1.jpeg",
     "local_image_path": "popular_meme_images\\upvotes_32764_comments_252.jpg",
-    "extracted_text": "Doing dishes for the next hour Eating it in 20 minutes Preparing a dish for 2 hours",
+    "extracted_text": "[original] Doing dishes for the next hour Eating itin 20 minutes Preparing a dish for 2 hours Doing dishes for the next hour Eating itin 20 minutes Preparing a dish for 2 hours | [contrast] Doing dishesfor thenexthour Eating itin20 minutes Preparing a dish for 2 hours Doing dishesfor thenexthour Eating itin20 minutes Preparing a dish for 2 hours | [inverted] Doing dishes for the next hour Eating it.in 20 minutes Preparing a dish for 2 hours Doing dishes for the next hour Eating it.in 20 minutes Preparing a dish for 2 hours | [threshold] : Doing di esfo 20 mind : Doing di esfo 20 mind",
     "image_labels": [
         "City",
         "Road",
@@ -15,5 +15,6 @@
         "Neighborhood",
         "Tar"
     ],
-    "processed_at": "2025-02-24T14:27:22.804208+00:00"
+    "processed_at": "2025-02-25T01:05:32.406878+00:00",
+    "text_removed_path": "memes_no_text\\upvotes_32764_comments_252_text_removed.jpg"
 }

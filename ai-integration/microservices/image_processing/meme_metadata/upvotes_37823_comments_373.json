@@ -5,7 +5,7 @@
     "reddit_permalink": "N/A",
     "image_url": "https://i.redd.it/w8e5xmb3syje1.jpeg",
     "local_image_path": "popular_meme_images\\upvotes_37823_comments_373.jpg",
-    "extracted_text": "I used to support Tom instead of Jerry in childhood.",
+    "extracted_text": "[original] I used to support Tom instead of Jerry in childhood. I used to support Tom instead of Jerry in childhood. | [contrast] I used to support Tom instead of Jerry in childhood. I used to support Tom instead of Jerry in childhood. | [inverted] I may look normal but I used to support Tom instead of Jerry in childhood. I may look normal but I used to support Tom instead of Jerry in childhood. | [threshold] I may look normal but in I used to support Tom instead of Jerry in childhood. I may look normal but in I used to support Tom instead of Jerry in childhood.",
     "image_labels": [
         "Face",
         "Head",
@@ -16,5 +16,6 @@
         "Male",
         "Man"
     ],
-    "processed_at": "2025-02-24T14:27:23.930494+00:00"
+    "processed_at": "2025-02-25T01:05:41.292350+00:00",
+    "text_removed_path": "memes_no_text\\upvotes_37823_comments_373_text_removed.jpg"
 }
