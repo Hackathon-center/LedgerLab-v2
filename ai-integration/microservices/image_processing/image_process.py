@@ -8,6 +8,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from mint_criteria import process_popular_memes, clean_directory
 from text_removal import remove_text_from_meme
+from cartoonify_image import cartoonify_image
 import requests
 from PIL import Image
 from io import BytesIO
@@ -99,18 +100,15 @@ def process_memes_with_metadata(df):
     """Process popular memes and extract metadata"""
     METADATA_DIR = 'meme_metadata'
     TEXT_REMOVED_DIR = 'memes_no_text'
+    CARTOONIFY_DIR = 'memes_cartoonified'
     
-    # Create directory for metadata if it doesn't exist
-    if os.path.exists(METADATA_DIR):
-        clean_directory(METADATA_DIR)
-    else:
-        os.makedirs(METADATA_DIR)
-        
-    # Create directory for text-removed images
-    if os.path.exists(TEXT_REMOVED_DIR):
-        clean_directory(TEXT_REMOVED_DIR)
-    else:
-        os.makedirs(TEXT_REMOVED_DIR)
+    # Create dirs if they don't exist
+    for directory in [METADATA_DIR, TEXT_REMOVED_DIR, CARTOONIFY_DIR]:
+        if os.path.exists(directory):
+            clean_directory(directory)
+        else:
+            os.makedirs(directory)
+    
     
     # Get popular memes
     popular_memes = process_popular_memes(df)
@@ -147,6 +145,18 @@ def process_memes_with_metadata(df):
                         # Update metadata with text-removed path
                         metadata['text_removed_path'] = text_removed_path
                         print(f"Successfully removed text from: {base_filename}")
+                        
+                        try:
+                            cartoonify_path = os.path.join(CARTOONIFY_DIR, f"cartoon_{os.path.basename(text_removed_path)}")
+                            cartoonify_image(text_removed_path, cartoonify_path)
+                            metadata['cartoonify_path'] = cartoonify_path
+                            print(f"Successfully cartoonified: {base_filename}")
+                        except Exception as e:
+                            metadata['cartoonify_path'] = None
+                    else:
+                        metadata['text_removed_path'] = None
+                        metadata['cartoonified_path'] = None  
+                              
                 except Exception as e:
                     metadata['text_removed_path'] = None
             else:
