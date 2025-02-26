@@ -10,9 +10,11 @@ class Meme(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     picture = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
-    trend_score = db.Column(db.Float, nullable=False)
+    up_vote = db.Column(db.Integer)
+    comments = db.Column(db.Integer)
     created_at = db.Column(db.DateTime, default=datetime.timestamp)
-    content_identifier = db.Column(db.String, nullable=False)
+    metadata_cid = db.Column(db.String, nullable=False)
+    image_cid = db.Column(db.String, nullable=False)
 
 class Tokens(db.Model):
     id = db.Column(db.Integer, primary_key=True)
