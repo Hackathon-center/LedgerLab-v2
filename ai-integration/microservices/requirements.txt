@@ -13,3 +13,6 @@ schedule
 watchdog
 asyncio
 shutil
+flask
+flask_sqlalchemy
+flask_migrate
