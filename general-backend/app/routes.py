@@ -11,11 +11,6 @@ OWNER_ACCOUNT_ID = ""
 PRIVATE_KEY = ""
 
 
-client = NearClient(network="testnet")
-
-def call_contract_method(method, args):
-    return client.call_contract(NEAR_ACCOUNT_ID, CONTRACT_ID, method, args)
-
 
 
 
