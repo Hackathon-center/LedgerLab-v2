@@ -11,6 +11,13 @@ OWNER_ACCOUNT_ID = ""
 PRIVATE_KEY = ""
 
 
+client = NearClient(network="testnet")
+
+def call_contract_method(method, args):
+    return client.call_contract(NEAR_ACCOUNT_ID, CONTRACT_ID, method, args)
+
+
+
 
 main_bp = Blueprint("main", __name__)
 
@@ -29,6 +36,12 @@ def mint_token():
         data = request.json
         wallet_id = data.get("wallet_id")
         meme_id = str(data.get("meme_id"))
+
+
+        existing_mint = Tokens.query.filter_by(wallet_id=wallet_id, meme_id=meme_id).first()
+
+        if existing_mint:
+            return jsonify({"status" : 400 , "success" : False , "error" : 'You have already minted this meme!'})
 
         if not wallet_id or not meme_id:
             return jsonify({"status" : 400 , "success" : False , "error" : "missing details for transaction"})
@@ -71,6 +84,10 @@ def mint_token():
 
         return jsonify({"status" : 200 , "success" : True , "transaction" : result})
     except Exception as e :
+
+        new_token.status = "failed"
+        db.session.commit()
+
         return jsonify({"status" : 500 , "success" : False , "error" : str(e)})
 
 
