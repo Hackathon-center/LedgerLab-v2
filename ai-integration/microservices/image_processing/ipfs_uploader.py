@@ -3,6 +3,12 @@ import json
 import requests
 from datetime import datetime
 from dotenv import load_dotenv
+import sys
+
+sys.path.append(os.path.abspath("../../../general-backend"))
+
+from app import db, create_app
+from app.models import Meme
 
 load_dotenv()
 
@@ -58,6 +64,32 @@ def pin_json_to_ipfs(json_data):
         raise Exception(f"Failed to pin JSON to IPFS: {response.text}")
 
 
+def save_to_database(metadata, image_cid, metadata_cid):
+    """Save meme information to the database"""
+    try:
+        # Create a new Meme instance
+        new_meme = Meme(
+            picture=metadata.get("local_image_path", ""), 
+            title=metadata.get("title", ""),
+            up_vote=metadata.get("upvotes", 0),
+            comments=metadata.get("comments", 0),
+            created_at=datetime.now(),
+            metadata_cid=metadata_cid,
+            image_cid=image_cid
+        )
+        
+        # Add to session and commit to database
+        db.session.add(new_meme)
+        db.session.commit()
+        
+        print(f"Successfully saved meme to database with ID: {new_meme.id}")
+        return True
+    except Exception as e:
+        print(f"Error saving to database: {str(e)}")
+        db.session.rollback()
+        return False
+
+
 def save_ipfs_data(local_image_path, image_cid, metadata_cid, metadata):
     # Load existing CIDs
     if os.path.exists(IPFS_CID_FILE):
@@ -100,8 +132,18 @@ def upload_to_ipfs(metadata):
         # Upload metadata to IPFS
         metadata_cid = pin_json_to_ipfs(enhanced_metadata)
         
-        # Save CIDs with additional data
+        # Save CIDs with additional data to JSON file (keeping for backward compatibility)
         save_ipfs_data(local_image_path, image_cid, metadata_cid, metadata)
+        
+        # Initialize Flask app 
+        app = create_app()
+        with app.app_context():
+            # Save to database
+            db_save_result = save_to_database(metadata, image_cid, metadata_cid)
+            if db_save_result:
+                print(f"Successfully saved meme metadata to database")
+            else:
+                print(f"Failed to save meme metadata to database")
         
         return {
             "success": True,
