@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app import db
-from app.models import Meme, Token
+from app.models import Meme, Tokens
 
 main_bp = Blueprint("main", __name__)
 
