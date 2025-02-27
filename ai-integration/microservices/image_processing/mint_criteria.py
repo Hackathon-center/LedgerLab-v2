@@ -21,7 +21,7 @@ def clean_directory(directory):
 
 class MemeMonitor:
     def __init__(self, 
-                min_upvotes: int = 1000,    
+                min_upvotes: int = 3000,    
                 min_comments: int = 20,     
                 engagement_ratio: float = 0.1,
                 time_window_hours: int = 168):  
