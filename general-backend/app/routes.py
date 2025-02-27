@@ -18,7 +18,27 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/getTrending", methods=["GET"])
 def get_top_trending_memes():
-    pass
+    try:
+        trending_memes = Meme.query.order_by(Meme.created_at.desc()).limit(10).all()
+        
+        results = []
+        for meme in trending_memes:
+            result.append({
+                "id": meme.id,
+                "title": meme.title,
+                "picture": meme.picture,
+                "upvotes": meme.up_vote,
+                "comments": meme.comments,
+                "created_at": meme.created_at.isoformat(),
+                "image_cid": meme.image_cid,
+                "metadata_cid": meme.metadata_cid
+            })
+            
+            
+        return jsonify({"status": 200, "data": results})
+    except:
+        return jsonify({"status": 500, "error": str(e)})
+        
 
 @main_bp.route("/mintHistory", methods=["GET"])
 def mint_history():
