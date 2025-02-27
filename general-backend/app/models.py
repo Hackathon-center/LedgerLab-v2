@@ -12,7 +12,7 @@ class Meme(db.Model):
     title = db.Column(db.String, nullable=False)
     up_vote = db.Column(db.Integer)
     comments = db.Column(db.Integer)
-    created_at = db.Column(db.DateTime, default=datetime.timestamp)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     metadata_cid = db.Column(db.String, nullable=False)
     image_cid = db.Column(db.String, nullable=False)
 
