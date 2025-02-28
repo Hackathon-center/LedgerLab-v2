@@ -3448,9 +3448,7 @@ class Token {
     this.status = "minted";
   }
 }
-let MemeNFTContract = (_dec = NearBindgen({
-  requireInit: true
-}), _dec2 = call({
+let MemeNFTContract = (_dec = NearBindgen({}), _dec2 = call({
   payableFunction: true
 }), _dec3 = view(), _dec4 = view(), _dec(_class = (_class2 = class MemeNFTContract {
   constructor() {

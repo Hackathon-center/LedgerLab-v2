@@ -313,7 +313,7 @@ class Token {
 
 import { NearBindgen, near, call, view, UnorderedMap } from "near-sdk-js";
 
-@NearBindgen({ requireInit: true })
+@NearBindgen({})
 class MemeNFTContract {
   tokens_by_id: UnorderedMap<Token>;
   tokens_per_owner: UnorderedMap<string[]>;
