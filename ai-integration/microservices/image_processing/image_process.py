@@ -7,10 +7,6 @@ from datetime import datetime, timezone
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from mint_criteria import process_popular_memes, clean_directory
-import requests
-from PIL import Image
-from io import BytesIO
-import shutil
 from dotenv import load_dotenv
 from ipfs_uploader import upload_to_ipfs
 
