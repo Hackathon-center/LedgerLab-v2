@@ -2,16 +2,17 @@ from datetime import datetime
 from flask import Blueprint, request, jsonify
 from app import db
 from app.models import Meme, Tokens
-from near_api import NearRpcProvider, transactions, KeyPair, Account
+# from near_api import NearRpcProvider, transactions, KeyPair, Account
+from near_api.providers import JsonProvider
+from near_api.signer import KeyPair
+from near_api.account import Account
+from near_api.transactions import Transaction, SignedTransaction
 
 
 # should be put in .env once contract deployed
 CONTRACT_ID = ""
 OWNER_ACCOUNT_ID = ""
 PRIVATE_KEY = ""
-
-
-
 
 
 main_bp = Blueprint("main", __name__)
@@ -23,7 +24,7 @@ def get_top_trending_memes():
         
         results = []
         for meme in trending_memes:
-            result.append({
+            results.append({
                 "id": meme.id,
                 "title": meme.title,
                 "picture": meme.picture,
@@ -72,7 +73,7 @@ def mint_token():
             wallet_id=wallet_id,
             token_name=token_name,
             supply=1,
-            minted_at=datetime.timestamp(),
+            minted_at=datetime.utcnow(),
             status="pending"
         )
         db.session.add(new_token)
