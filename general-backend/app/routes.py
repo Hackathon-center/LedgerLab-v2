@@ -73,7 +73,7 @@ def mint_token():
             wallet_id=wallet_id,
             token_name=token_name,
             supply=1,
-            minted_at=datetime.utcnow(),
+            minted_at=datetime.timestamp,
             status="pending"
         )
         db.session.add(new_token)
@@ -90,7 +90,7 @@ def mint_token():
         result = account.function_call(
             contract_id=CONTRACT_ID,
             method_name="mint_meme",
-            args={"meme_id": meme_id},
+            args={"meme_id": meme_id , "image_cid" : meme.image_cid , "title" : meme.title},
             gas=30000000000000,
             amount=0.1
         )

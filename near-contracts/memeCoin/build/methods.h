@@ -1,0 +1,3 @@
+DEFINE_NEAR_METHOD(get_token)
+DEFINE_NEAR_METHOD(get_tokens_by_owner)
+DEFINE_NEAR_METHOD(mint_meme)

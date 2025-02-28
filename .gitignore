@@ -2,3 +2,7 @@
 .env
 __pycache__/
 .idea
+ai-integration/microservices/image_processing/meme_metadata/upvotes_20543_comments_483.json
+ai-integration/microservices/image_processing/ipfs_cids.json
+ai-integration/microservices/image_processing/meme_metadata/upvotes_5219_comments_176.json
+ai-integration/microservices/image_processing/meme_metadata/upvotes_7582_comments_478.json
