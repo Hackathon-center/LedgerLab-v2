@@ -22,7 +22,7 @@ class Tokens(db.Model):
     wallet_id = db.Column(db.String, db.ForeignKey("user.wallet_id"), nullable=False)
     token_name = db.Column(db.String, nullable=False)
     supply = db.Column(db.Integer)
-    minted_at = db.Column(db.DateTime, default=datetime.timestamp)
+    minted_at = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String, nullable=False)
 
     meme = db.relationship("Meme", backref="tokens")
