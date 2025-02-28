@@ -18,5 +18,8 @@
         "Poster",
         "People"
     ],
-    "processed_at": "2025-02-26T21:31:58.809576+00:00"
+    "processed_at": "2025-02-28T03:25:38.723834+00:00",
+    "ipfs_image_cid": "QmVTwgewDxw5rFYyKwqJuoW1ZhdDFTNxbFYsHT5iXQGAT9",
+    "ipfs_metadata_cid": "QmUFc7uw9HhSrkoep2fgYGpnvMa5Zrq67Ez9Scb8DK8Ygd",
+    "ipfs_image_url": "ipfs://QmVTwgewDxw5rFYyKwqJuoW1ZhdDFTNxbFYsHT5iXQGAT9"
 }

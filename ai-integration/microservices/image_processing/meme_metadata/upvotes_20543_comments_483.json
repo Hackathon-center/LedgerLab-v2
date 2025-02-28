@@ -14,5 +14,8 @@
         "Head",
         "Face"
     ],
-    "processed_at": "2025-02-26T21:31:56.313218+00:00"
+    "processed_at": "2025-02-28T03:25:35.716815+00:00",
+    "ipfs_image_cid": "QmNzhm9qDPo6Rwc4RSP3KT5c6u58m4JZoa5foLRAtiCakR",
+    "ipfs_metadata_cid": "QmSA4ota1mzDnSgUZNzWhxM68rTWrXKFRe1SMyWwDJVB5Y",
+    "ipfs_image_url": "ipfs://QmNzhm9qDPo6Rwc4RSP3KT5c6u58m4JZoa5foLRAtiCakR"
 }
