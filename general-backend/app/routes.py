@@ -21,7 +21,7 @@ main_bp = Blueprint("main", __name__)
 def get_top_trending_memes():
     try:
         trending_memes = Meme.query.order_by(Meme.created_at.desc()).limit(10).all()
-        
+
         results = []
         for meme in trending_memes:
             results.append({
@@ -34,12 +34,12 @@ def get_top_trending_memes():
                 "image_cid": meme.image_cid,
                 "metadata_cid": meme.metadata_cid
             })
-            
-            
+
+
         return jsonify({"status": 200, "data": results})
     except:
         return jsonify({"status": 500, "error": str(e)})
-        
+
 
 @main_bp.route("/mintHistory", methods=["GET"])
 def mint_history():
@@ -81,7 +81,7 @@ def mint_token():
 
 
         # NEAR initialization
-        provider = NearRpcProvider("https://rpc.testnet.near.org")
+        provider = JsonProvider("https://rpc.testnet.near.org")
         key_pair = KeyPair(PRIVATE_KEY)
         account = Account(provider, OWNER_ACCOUNT_ID, key_pair)
 
