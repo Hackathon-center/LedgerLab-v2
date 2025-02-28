@@ -24,7 +24,7 @@ class MemeMonitor:
                 min_upvotes: int = 3000,    
                 min_comments: int = 20,     
                 engagement_ratio: float = 0.1,
-                time_window_hours: int = 168):  
+                time_window_hours: int = 200):  
         self.min_upvotes = min_upvotes
         self.min_comments = min_comments
         self.engagement_ratio = engagement_ratio
