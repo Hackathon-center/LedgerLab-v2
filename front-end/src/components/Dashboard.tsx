@@ -23,15 +23,21 @@ export default function Dashboard({
             Trending Memes
           </h2>
           <div className="grid grid-cols-1 gap-6">
-            {memes.map((meme) => (
-              <MemeCard
-                key={meme.id}
-                meme={meme}
-                wallet={wallet}
-                mintHistory={mintHistory}
-                onMintSuccess={onMintSuccess}
-              />
-            ))}
+            {mintHistory.length === 0 ? (
+              <p className="text-gray-500">No mint history found</p>
+            ) : (
+              <>
+                {memes.map((meme) => (
+                  <MemeCard
+                    key={meme.id}
+                    meme={meme}
+                    wallet={wallet}
+                    mintHistory={mintHistory}
+                    onMintSuccess={onMintSuccess}
+                  />
+                ))}
+              </>
+            )}
           </div>
         </div>
 
