@@ -37,7 +37,7 @@ def get_top_trending_memes():
 
 
         return jsonify({"status": 200, "data": results})
-    except:
+    except Exception as e:
         return jsonify({"status": 500, "error": str(e)})
 
 
@@ -91,7 +91,6 @@ def mint_token():
             contract_id=CONTRACT_ID,
             method_name="mint_meme",
             args={"meme_id": meme_id , "image_cid" : meme.image_cid , "title" : meme.title},
-            gas=30000000000000,
             amount=0.1
         )
 
