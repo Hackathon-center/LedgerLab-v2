@@ -2,12 +2,8 @@ from app import db
 from datetime import datetime
 
 
-class User(db.Model):
-    wallet_id = db.Column(db.String, primary_key=True)
-
-
 class Meme(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
     picture = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
     up_vote = db.Column(db.Integer)
@@ -24,6 +20,3 @@ class Tokens(db.Model):
     supply = db.Column(db.Integer)
     minted_at = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String, nullable=False)
-
-    meme = db.relationship("Meme", backref="tokens")
-    user = db.relationship("User", backref="tokens")

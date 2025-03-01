@@ -43,7 +43,33 @@ def get_top_trending_memes():
 
 @main_bp.route("/mintHistory", methods=["GET"])
 def mint_history():
-    pass
+    try:
+        wallet_id = request.args.get("wallet_id")
+        
+        if not wallet_id:
+            return jsonify({"status": 400, "success": False, "error": "Wallet ID is required"})
+        
+        # Get all tokens minted by this wallet
+        tokens = Tokens.query.filter_by(wallet_id=wallet_id).all()
+        
+        if not tokens:
+            return jsonify({"status": 200, "success": True, "data": []})
+        
+        results = []
+        for token in tokens:
+            results.append({
+                "token_id": token.id,
+                "meme_id": token.meme_id,
+                "token_name": token.token_name,
+                "supply": token.supply,
+                "minted_at": token.minted_at.isoformat() if isinstance(token.minted_at, datetime) else token.minted_at,
+                "status": token.status
+            })
+            
+        return jsonify({"status": 200, "success": True, "data": results})
+    
+    except Exception as e:
+        return jsonify({"status": 500, "success": False, "error": str(e)})
 
 
 @main_bp.route("/mintToken", methods=["POST"])
