@@ -3,14 +3,9 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Meme } from "../utils";
-import { WalletConnection } from "near-api-js";
-
-interface MemeDetailProps {
-  wallet: WalletConnection | null;
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const MemeDetail: React.FC<MemeDetailProps> = ({ wallet }) => {
+const MemeDetail = () => {
   const { id } = useParams();
   const [meme, setMeme] = useState<Meme>();
 

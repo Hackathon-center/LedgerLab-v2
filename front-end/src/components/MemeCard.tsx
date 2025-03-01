@@ -1,5 +1,5 @@
 import axios from "axios";
-import { WalletConnection } from "near-api-js";
+
 import { useState } from "react";
 import { Meme, Token } from "../utils";
 // components/MemeCard.tsx
@@ -10,7 +10,7 @@ export default function MemeCard({
   onMintSuccess,
 }: {
   meme: Meme;
-  wallet: WalletConnection | null;
+  wallet: string | null;
   mintHistory: Token[];
   onMintSuccess: () => void;
 }) {
@@ -18,12 +18,12 @@ export default function MemeCard({
   const alreadyMinted = mintHistory.some((h: Token) => h.meme_id === meme.id);
 
   const handleMint = async () => {
-    if (!wallet?.isSignedIn()) return;
+    if (!wallet) return;
 
     try {
       setIsMinting(true);
       await axios.post("/mintToken", {
-        wallet_id: wallet.getAccountId(),
+        wallet_id: wallet,
         meme_id: meme.id,
       });
       onMintSuccess();
@@ -50,7 +50,7 @@ export default function MemeCard({
             <p>Comments: {meme.comments}</p>
           </div>
 
-          {wallet?.isSignedIn() && (
+          {wallet && (
             <button
               onClick={handleMint}
               disabled={alreadyMinted || isMinting}

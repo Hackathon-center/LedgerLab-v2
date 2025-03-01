@@ -1,4 +1,3 @@
-import { WalletConnection } from "near-api-js";
 import MemeCard from "./MemeCard";
 import { Meme, Token } from "../utils";
 
@@ -9,7 +8,7 @@ export default function Dashboard({
   mintHistory,
   onMintSuccess,
 }: {
-  wallet: WalletConnection | null;
+  wallet: string | null;
   memes: Meme[];
   mintHistory: Token[];
   onMintSuccess: () => void;

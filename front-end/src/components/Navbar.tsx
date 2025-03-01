@@ -1,11 +1,13 @@
-import { WalletConnection } from "near-api-js";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // components/Navbar.tsx
 export default function Navbar({
-  wallet,
+  accountId,
+  onSignIn,
   onSignOut,
 }: {
-  wallet: WalletConnection | null;
+  accountId: string | null;
+  onSignIn: () => void;
   onSignOut: () => void;
 }) {
   return (
@@ -13,9 +15,9 @@ export default function Navbar({
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         <h1 className="text-xl font-bold text-gray-800">MemeNFT</h1>
 
-        {wallet?.isSignedIn() ? (
+        {accountId ? (
           <div className="flex items-center gap-4">
-            <span className="text-gray-600">{wallet.getAccountId()}</span>
+            <span className="text-gray-600">{accountId}</span>
             <button
               onClick={onSignOut}
               className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
@@ -25,15 +27,10 @@ export default function Navbar({
           </div>
         ) : (
           <button
-            onClick={() =>
-              wallet?.requestSignIn({
-                contractId: "ledgerlabhack.testnet",
-                keyType: "ed25519",
-              })
-            }
+            onClick={onSignIn}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
           >
-            Connect NEAR Wallet
+            Connect Wallet
           </button>
         )}
       </div>
