@@ -37,7 +37,7 @@ function App() {
 
   const fetchTrendingMemes = async () => {
     try {
-      const res = await axios.get("/getTrending");
+      const res = await axios.get("http://localhost:5000/getTrending");
       setMemes(res.data.data);
     } catch (error) {
       console.error("Error fetching memes:", error);
@@ -46,7 +46,9 @@ function App() {
 
   const fetchMintHistory = async (walletId: string) => {
     try {
-      const res = await axios.get(`/mintHistory?wallet_id=${walletId}`);
+      const res = await axios.get(
+        `http://localhost:5000/mintHistory?wallet_id=${walletId}`
+      );
       setMintHistory(res.data.data);
     } catch (error) {
       console.error("Error fetching mint history:", error);
