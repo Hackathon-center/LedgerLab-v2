@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class Meme(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True) 
     picture = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
     up_vote = db.Column(db.Integer)
