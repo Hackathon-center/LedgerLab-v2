@@ -10,9 +10,11 @@ from near_api.transactions import Transaction, SignedTransaction
 
 
 # should be put in .env once contract deployed
-CONTRACT_ID = ""
-OWNER_ACCOUNT_ID = ""
-PRIVATE_KEY = ""
+CONTRACT_ID = "D6qdR9WLs7Nx39iQeWWPr8CMm6fndbtHdP81Koa1CxLx"
+OWNER_ACCOUNT_ID = "ledgerlabhack.testnet"
+PRIVATE_KEY = "ed25519:4a2647HjvDJMPeV6RsoUVQgAn3t8nsgTMbD7BXocmEHUPSgVGYWSHqcCEhuLGwQLXRZozEmq7G5buA7n1yMQs3At"
+
+
 
 
 main_bp = Blueprint("main", __name__)
@@ -45,16 +47,16 @@ def get_top_trending_memes():
 def mint_history():
     try:
         wallet_id = request.args.get("wallet_id")
-        
+
         if not wallet_id:
             return jsonify({"status": 400, "success": False, "error": "Wallet ID is required"})
-        
+
         # Get all tokens minted by this wallet
         tokens = Tokens.query.filter_by(wallet_id=wallet_id).all()
-        
+
         if not tokens:
             return jsonify({"status": 200, "success": True, "data": []})
-        
+
         results = []
         for token in tokens:
             results.append({
@@ -65,9 +67,9 @@ def mint_history():
                 "minted_at": token.minted_at.isoformat() if isinstance(token.minted_at, datetime) else token.minted_at,
                 "status": token.status
             })
-            
+
         return jsonify({"status": 200, "success": True, "data": results})
-    
+
     except Exception as e:
         return jsonify({"status": 500, "success": False, "error": str(e)})
 
