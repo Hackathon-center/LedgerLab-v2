@@ -29,18 +29,6 @@ export default function MemeCard({
       // Get wallet connection
       const walletConnection = await selector.wallet();
 
-      // Convert args to Uint8Array
-      // const args = Buffer.from(
-      //   JSON.stringify({
-      //     args: {
-      //       meme_id: meme.id.toString(),
-      //       image_cid: meme.image_cid,
-      //       title: meme.title,
-      //       receiver_id: wallet, // Add this line
-      //     },
-      //   })
-      // );
-
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const result = await walletConnection.signAndSendTransaction({
         receiverId: import.meta.env.VITE_CONTRACT_ID,
@@ -63,7 +51,7 @@ export default function MemeCard({
 
       console.log(result);
 
-      await axios.post("http://localhost:5000//mintToken", {
+      await axios.post("http://localhost:5000/mintToken", {
         wallet_id: wallet,
         meme_id: meme.id,
       });

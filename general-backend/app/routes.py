@@ -58,7 +58,7 @@ def mint_history():
             return jsonify({"status": 400, "success": False, "error": "Wallet ID is required"})
 
         # Get all tokens minted by this wallet
-        tokens = Tokens.query.filter_by(wallet_id=wallet_id).all()
+        tokens = Tokens.query.filter_by(wallet_id=wallet_id).order_by(Tokens.minted_at.desc()).limit(10).all()
 
         if not tokens:
             return jsonify({"status": 200, "success": True, "data": []})
