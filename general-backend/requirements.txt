@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-CORS
+python-dotenv
+pandas
+near-api
