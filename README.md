@@ -18,7 +18,7 @@ cd LedgerLab-v2
 
 ## Front-end
 
-This is the user interface that let's you see the memes , connect your wallet and mint meme :
+This is the user interface that let's you see the memes , connect your wallet and mint meme:
 
 ### Setup and Running
 
