@@ -2460,6 +2460,23 @@ var PromiseError;
 const U64_MAX = 2n ** 64n - 1n;
 const EVICTED_REGISTER = U64_MAX - 1n;
 /**
+ * Logs parameters in the NEAR WASM virtual machine.
+ *
+ * @param params - Parameters to log.
+ */
+function log(...params) {
+  env.log(params.reduce((accumulated, parameter, index) => {
+    // Stringify undefined
+    const param = parameter === undefined ? "undefined" : parameter;
+    // Convert Objects to strings and convert to string
+    const stringified = typeof param === "object" ? JSON.stringify(param) : `${param}`;
+    if (index === 0) {
+      return stringified;
+    }
+    return `${accumulated} ${stringified}`;
+  }, ""));
+}
+/**
  * Returns the account ID of the account that called the function.
  * Can only be called in a call or initialize function.
  */
@@ -3077,6 +3094,17 @@ class UnorderedMapIterator {
 }
 
 /**
+ * Tells the SDK to use this function as the initialization function of the contract.
+ *
+ * @param _empty - An empty object.
+ */
+function initialize(_empty) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return function (_target, _key, _descriptor
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  ) {};
+}
+/**
  * Tells the SDK to expose this function as a view function.
  *
  * @param _empty - An empty object.
@@ -3156,347 +3184,116 @@ function NearBindgen({
   };
 }
 
-var _dec, _dec2, _dec3, _dec4, _class, _class2;
-// import {
-//   NearBindgen,
-//   near,
-//   call,
-//   view,
-//   initialize,
-//   LookupMap,
-//   UnorderedMap,
-// } from "near-sdk-js";
-
-// class NFTMetadata {
-//   id: number;
-//   name: string;
-//   symbol: string;
-//   media: string;
-
-//   constructor(id: number, name: string, symbol: string, media: string) {
-//     this.id = id;
-//     this.name = name;
-//     this.symbol = symbol;
-//     this.media = media;
-//   }
-// }
-
-// class TokenMetadata {
-//   title: string;
-//   description: string;
-//   media: string;
-//   copies: number;
-//   issued_at: string;
-//   expires_at: string;
-//   starts_at: string;
-
-//   constructor(title: string, description: string, media: string) {
-//     this.title = title;
-//     this.description = description;
-//     this.media = media;
-//     this.copies = 1;
-//     this.issued_at = null;
-//     this.expires_at = null;
-//     this.starts_at = null;
-//   }
-// }
-
-// class Meme {
-//   id: number;
-//   picture: string;
-//   title: string;
-//   trend_score: number;
-//   created_at: bigint;
-//   content_identifier: string;
-//   minted: boolean;
-
-//   constructor(
-//     id: number,
-//     picture: string,
-//     title: string,
-//     trend_score: number,
-//     content_identifier: string
-//   ) {
-//     this.id = id;
-//     this.picture = picture;
-//     this.title = title;
-//     this.trend_score = trend_score;
-//     this.created_at = near.blockTimestamp();
-//     this.content_identifier = content_identifier;
-//     this.minted = false;
-//   }
-// }
-
-// class Token {
-//   token_id: string;
-//   owner_id: string;
-//   metadata: TokenMetadata;
-//   meme_id: number;
-//   token_name: string;
-//   supply: number;
-//   minted_at: bigint;
-//   status: string;
-
-//   constructor(
-//     token_id: string,
-//     owner_id: string,
-//     metadata: TokenMetadata,
-//     meme_id: number,
-//     token_name: string,
-//     supply: number
-//   ) {
-//     this.token_id = token_id;
-//     this.owner_id = owner_id;
-//     this.metadata = metadata;
-//     this.meme_id = meme_id;
-//     this.token_name = token_name;
-//     this.supply = supply;
-//     this.minted_at = near.blockTimestamp();
-//     this.status = "minted";
-//   }
-// }
-
-// @NearBindgen({ requireInit: true })
-// class MemeNFTContract {
-//   owner_id: string;
-//   metadata: NFTMetadata;
-//   tokens_per_owner: LookupMap<string[]>;
-//   tokens_by_id: LookupMap<Token>;
-//   token_metadata_by_id: UnorderedMap<TokenMetadata>;
-//   memes: UnorderedMap<Meme>;
-//   token_id_counter: number;
-
-//   constructor() {
-//     this.owner_id = "";
-//     this.metadata = null;
-//     this.tokens_per_owner = new LookupMap("tokens_per_owner");
-//     this.tokens_by_id = new LookupMap("tokens_by_id");
-//     this.token_metadata_by_id = new UnorderedMap("token_metadata_by_id");
-//     this.memes = new UnorderedMap("memes");
-//     this.token_id_counter = 0;
-//   }
-
-//   @initialize({})
-//   init({ owner_id, metadata }: { owner_id: string; metadata: NFTMetadata }) {
-//     this.owner_id = owner_id;
-//     this.metadata = metadata;
-//   }
-
-//   // Add memes to the contract
-//   @call({ payableFunction: false })
-//   add_memes({
-//     memes,
-//   }: {
-//     memes: Array<{
-//       id: number;
-//       picture: string;
-//       title: string;
-//       trend_score: number;
-//       content_identifier: string;
-//     }>;
-//   }) {
-//     this.assert_owner();
-
-//     for (let i = 0; i < memes.length; i++) {
-//       const memeData = memes[i];
-//       const existingMeme = this.memes.get(memeData.id.toString());
-
-//       if (!existingMeme) {
-//         const newMeme = new Meme(
-//           memeData.id,
-//           memeData.picture,
-//           memeData.title,
-//           memeData.trend_score,
-//           memeData.content_identifier
-//         );
-//         this.memes.set(memeData.id.toString(), newMeme);
-//       } else {
-//         existingMeme.trend_score = memeData.trend_score;
-//         this.memes.set(memeData.id.toString(), existingMeme);
-//       }
-//     }
-//   }
-
-//   //  mint a specific meme
-//   @call({ payableFunction: true })
-//   mint_meme({ meme_id }: { meme_id: string }) {
-//     const meme = this.memes.get(meme_id);
-
-//     if (!meme) {
-//       throw new Error("Meme not found");
-//     }
-
-//     if (meme.minted) {
-//       throw new Error("Meme already minted");
-//     }
-
-//     const token_id = (this.token_id_counter++).toString();
-//     const caller = near.predecessorAccountId();
-
-//     const metadata = new TokenMetadata(
-//       meme.title,
-//       `Reddit meme NFT with trend score ${meme.trend_score}`,
-//       meme.picture
-//     );
-
-//     const token_name = `MEME-${meme.id}`;
-//     const supply = 1;
-
-//     const token = new Token(
-//       token_id,
-//       caller,
-//       metadata,
-//       meme.id,
-//       token_name,
-//       supply
-//     );
-
-//     this.tokens_by_id.set(token_id, token);
-
-//     const tokens = this.tokens_per_owner.get(caller) || [];
-//     tokens.push(token_id);
-//     this.tokens_per_owner.set(caller, tokens);
-
-//     this.token_metadata_by_id.set(token_id, metadata);
-
-//     meme.minted = true;
-//     this.memes.set(meme_id, meme);
-
-//     return {
-//       id: parseInt(token_id),
-//       meme_id: meme.id,
-//       wallet_id: caller,
-//       token_name: token_name,
-//       supply: supply,
-//       minted_at: token.minted_at,
-//       status: token.status,
-//     };
-//   }
-
-//   // get tokens owned by a specific account
-//   @view({})
-//   get_tokens_by_owner({ account_id }: { account_id: string }): Token[] {
-//     const token_ids = this.tokens_per_owner.get(account_id) || [];
-//     const tokens: Token[] = [];
-
-//     for (let i = 0; i < token_ids.length; i++) {
-//       const token = this.tokens_by_id.get(token_ids[i]);
-//       tokens.push(token);
-//     }
-
-//     return tokens;
-//   }
-
-//   // Get specific token details
-//   @view({})
-//   get_token_details({ token_id }: { token_id: string }) {
-//     const token = this.tokens_by_id.get(token_id);
-//     if (!token) {
-//       throw new Error("Token not found");
-//     }
-
-//     const meme = this.memes.get(token.meme_id.toString());
-
-//     return {
-//       id: parseInt(token_id),
-//       meme_id: token.meme_id,
-//       wallet_id: token.owner_id,
-//       token_name: token.token_name,
-//       supply: token.supply,
-//       minted_at: token.minted_at,
-//       status: token.status,
-//       content_identifier: meme.content_identifier,
-//       picture: meme.picture,
-//       title: meme.title,
-//       trend_score: meme.trend_score,
-//     };
-//   }
-
-//   // verify the caller is the owner
-//   assert_owner() {
-//     const caller = near.predecessorAccountId();
-//     if (caller !== this.owner_id) {
-//       throw new Error("Only the owner can call this method");
-//     }
-//   }
-// }
-
 class TokenMetadata {
-  // Allow null
-  // Allow null
-  // Allow null
-
-  constructor(title, description, media) {
+  constructor(title, description, media, copies = 1, extra) {
     this.title = title;
     this.description = description;
     this.media = media;
-    this.copies = 1;
-    this.issued_at = null;
+    this.copies = copies;
+    this.media_hash = null;
+    this.issued_at = Date.now();
     this.expires_at = null;
     this.starts_at = null;
+    this.updated_at = null;
+    this.extra = extra ? JSON.stringify(extra) : null;
+    this.reference = null;
+    this.reference_hash = null;
   }
 }
 class Token {
-  constructor(token_id, owner_id, metadata, meme_id, token_name, supply) {
+  constructor(token_id, owner_id, creator_id, metadata) {
     this.token_id = token_id;
     this.owner_id = owner_id;
+    this.approved_account_ids = {
+      [creator_id]: Date.now()
+    };
     this.metadata = metadata;
-    this.meme_id = meme_id;
-    this.token_name = token_name;
-    this.supply = supply;
-    this.minted_at = blockTimestamp();
-    this.status = "minted";
   }
 }
-let MemeNFTContract = (_dec = NearBindgen({}), _dec2 = call({
+
+var _dec, _dec2, _dec3, _dec4, _dec5, _class, _class2;
+let MemeNFTContract = (_dec = NearBindgen({}), _dec2 = initialize(), _dec3 = call({
   payableFunction: true
-}), _dec3 = view(), _dec4 = view(), _dec(_class = (_class2 = class MemeNFTContract {
+}), _dec4 = view(), _dec5 = view(), _dec(_class = (_class2 = class MemeNFTContract {
   constructor() {
-    this.tokens_by_id = new UnorderedMap("tokens_by_id");
-    this.tokens_per_owner = new UnorderedMap("tokens_per_owner");
+    // Initialize with dummy values
+    this.owner_id = "temp.temp";
+    this.tokens_by_id = new UnorderedMap("tokens_v2");
+    this.tokens_per_owner = new LookupMap("owners_v2");
+    this.token_metadata_by_id = new UnorderedMap("metadata_v2");
     this.token_id_counter = 0;
   }
-  mint_meme({
+  init({
+    owner_id
+  }) {
+    // Re-initialize with actual values
+    this.owner_id = owner_id;
+    this.tokens_by_id = new UnorderedMap("tokens_v2");
+    this.tokens_per_owner = new LookupMap("owners_v2");
+    this.token_metadata_by_id = new UnorderedMap("metadata_v2");
+    this.token_id_counter = 0;
+  }
+  nft_mint({
     meme_id,
     image_cid,
     title
   }) {
-    const caller = predecessorAccountId();
+    const predecessor = predecessorAccountId();
     const token_id = (this.token_id_counter++).toString();
 
-    // Construct TokenMetadata instance
-    const metadata = new TokenMetadata(title, `A trending meme NFT with ID ${meme_id}`, `https://gateway.ipfs.io/ipfs/${image_cid}`);
-    const token = new Token(token_id, caller, metadata, parseInt(meme_id), `Meme_${meme_id}_Token_for_${caller}`, 1);
+    // Create metadata according to NEP-171 standard
+    const metadata = new TokenMetadata(title, `A trending meme NFT with ID ${meme_id}`, `https://ipfs.io/ipfs/${image_cid}`,
+    // Media URL
+    1,
+    // Copies
+    [
+    // Extra attributes
+    {
+      trait_type: "Meme ID",
+      value: meme_id
+    }, {
+      trait_type: "Minted At",
+      value: blockTimestamp().toString()
+    }]);
 
-    // Store token
+    // Create token
+    const token = new Token(token_id, predecessor, predecessor, metadata);
+
+    // Store data
     this.tokens_by_id.set(token_id, token);
+    this.token_metadata_by_id.set(token_id, metadata);
 
-    // Update ownership
-    const tokens = this.tokens_per_owner.get(caller) || [];
-    tokens.push(token_id);
-    this.tokens_per_owner.set(caller, tokens);
-    return {
-      status: 200,
-      success: true,
-      transaction: {
-        token_id,
-        meme_id: parseInt(meme_id),
-        wallet_id: caller
-      }
-    };
+    // Update owner's token list
+    let owner_tokens = this.tokens_per_owner.get(predecessor) || [];
+    owner_tokens.push(token_id);
+    this.tokens_per_owner.set(predecessor, owner_tokens);
+
+    // Emit mint event (NEP-297 standard)
+    log(`EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[
+      {"owner_id":"${predecessor}","token_ids":["${token_id}"]}
+    ]}`);
+    return token;
   }
-  get_token({
+
+  // Required NEP-171 methods
+  nft_token({
     token_id
   }) {
-    return this.tokens_by_id.get(token_id) || null;
+    return this.tokens_by_id.get(token_id);
   }
-  get_tokens_by_owner({
-    owner_id
-  }) {
-    return this.tokens_per_owner.get(owner_id) || [];
+  nft_metadata() {
+    return {
+      spec: "nft-1.0.0",
+      name: "MemeNFT",
+      symbol: "MEME",
+      icon: null,
+      base_uri: null,
+      reference: null,
+      reference_hash: null
+    };
   }
-}, _applyDecoratedDescriptor(_class2.prototype, "mint_meme", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "mint_meme"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_token", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "get_token"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "get_tokens_by_owner", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "get_tokens_by_owner"), _class2.prototype), _class2)) || _class);
-function get_tokens_by_owner() {
+}, _applyDecoratedDescriptor(_class2.prototype, "init", [_dec2], Object.getOwnPropertyDescriptor(_class2.prototype, "init"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_mint", [_dec3], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_mint"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_token", [_dec4], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_token"), _class2.prototype), _applyDecoratedDescriptor(_class2.prototype, "nft_metadata", [_dec5], Object.getOwnPropertyDescriptor(_class2.prototype, "nft_metadata"), _class2.prototype), _class2)) || _class);
+function nft_metadata() {
   const _state = MemeNFTContract._getState();
   if (!_state && MemeNFTContract._requireInit()) {
     throw new Error("Contract must be initialized");
@@ -3506,10 +3303,10 @@ function get_tokens_by_owner() {
     MemeNFTContract._reconstruct(_contract, _state);
   }
   const _args = MemeNFTContract._getArgs();
-  const _result = _contract.get_tokens_by_owner(_args);
+  const _result = _contract.nft_metadata(_args);
   if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(MemeNFTContract._serialize(_result, true));
 }
-function get_token() {
+function nft_token() {
   const _state = MemeNFTContract._getState();
   if (!_state && MemeNFTContract._requireInit()) {
     throw new Error("Contract must be initialized");
@@ -3519,10 +3316,10 @@ function get_token() {
     MemeNFTContract._reconstruct(_contract, _state);
   }
   const _args = MemeNFTContract._getArgs();
-  const _result = _contract.get_token(_args);
+  const _result = _contract.nft_token(_args);
   if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(MemeNFTContract._serialize(_result, true));
 }
-function mint_meme() {
+function nft_mint() {
   const _state = MemeNFTContract._getState();
   if (!_state && MemeNFTContract._requireInit()) {
     throw new Error("Contract must be initialized");
@@ -3532,10 +3329,21 @@ function mint_meme() {
     MemeNFTContract._reconstruct(_contract, _state);
   }
   const _args = MemeNFTContract._getArgs();
-  const _result = _contract.mint_meme(_args);
+  const _result = _contract.nft_mint(_args);
+  MemeNFTContract._saveToStorage(_contract);
+  if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(MemeNFTContract._serialize(_result, true));
+}
+function init() {
+  const _state = MemeNFTContract._getState();
+  if (_state) {
+    throw new Error("Contract already initialized");
+  }
+  const _contract = MemeNFTContract._create();
+  const _args = MemeNFTContract._getArgs();
+  const _result = _contract.init(_args);
   MemeNFTContract._saveToStorage(_contract);
   if (_result !== undefined) if (_result && _result.constructor && _result.constructor.name === "NearPromise") _result.onReturn();else env.value_return(MemeNFTContract._serialize(_result, true));
 }
 
-export { get_token, get_tokens_by_owner, mint_meme };
+export { init, nft_metadata, nft_mint, nft_token };
 //# sourceMappingURL=hello_near.js.map

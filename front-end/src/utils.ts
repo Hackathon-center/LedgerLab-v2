@@ -1,12 +1,12 @@
 export interface Meme {
-  id: number;
-  picture: string;
-  title: string;
-  up_vote: number | null;
   comments: number | null;
   created_at: Date;
-  metadata_cid: string;
+  id: number;
   image_cid: string;
+  metadata_cid: string;
+  picture: string;
+  title: string;
+  upvotes: number | null;
   tokens?: Token[];
 }
 

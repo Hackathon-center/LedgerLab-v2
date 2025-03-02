@@ -2,30 +2,72 @@ import axios from "axios";
 
 import { useState } from "react";
 import { Meme, Token } from "../utils";
+import { WalletSelector } from "@near-wallet-selector/core";
 // components/MemeCard.tsx
 export default function MemeCard({
   meme,
   wallet,
   mintHistory,
+  selector,
   onMintSuccess,
 }: {
   meme: Meme;
   wallet: string | null;
   mintHistory: Token[];
+  selector: WalletSelector | null;
   onMintSuccess: () => void;
 }) {
   const [isMinting, setIsMinting] = useState(false);
   const alreadyMinted = mintHistory.some((h: Token) => h.meme_id === meme.id);
 
   const handleMint = async () => {
-    if (!wallet) return;
+    if (!wallet || !selector) return;
 
     try {
       setIsMinting(true);
-      await axios.post("/mintToken", {
+
+      // Get wallet connection
+      const walletConnection = await selector.wallet();
+
+      // Convert args to Uint8Array
+      // const args = Buffer.from(
+      //   JSON.stringify({
+      //     args: {
+      //       meme_id: meme.id.toString(),
+      //       image_cid: meme.image_cid,
+      //       title: meme.title,
+      //       receiver_id: wallet, // Add this line
+      //     },
+      //   })
+      // );
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const result = await walletConnection.signAndSendTransaction({
+        receiverId: import.meta.env.VITE_CONTRACT_ID,
+        actions: [
+          {
+            type: "FunctionCall",
+            params: {
+              methodName: "nft_mint",
+              args: {
+                meme_id: meme.id.toString(),
+                image_cid: meme.image_cid,
+                title: meme.title,
+              },
+              gas: "300000000000000",
+              deposit: "100000000000000000000000",
+            },
+          },
+        ],
+      });
+
+      console.log(result);
+
+      await axios.post("http://localhost:5000//mintToken", {
         wallet_id: wallet,
         meme_id: meme.id,
       });
+
       onMintSuccess();
     } catch (error) {
       console.error("Minting failed:", error);
@@ -46,7 +88,7 @@ export default function MemeCard({
 
         <div className="flex justify-between items-center">
           <div className="text-sm text-gray-500">
-            <p>Upvotes: {meme.up_vote}</p>
+            <p>Upvotes: {meme.upvotes}</p>
             <p>Comments: {meme.comments}</p>
           </div>
 

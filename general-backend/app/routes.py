@@ -1,5 +1,7 @@
 from datetime import datetime
-from flask import Blueprint, request, jsonify
+import os
+from dotenv import load_dotenv
+from flask import Blueprint, app, json, request, jsonify
 from app import db
 from app.models import Meme, Tokens
 # from near_api import NearRpcProvider, transactions, KeyPair, Account
@@ -9,10 +11,14 @@ from near_api.account import Account
 from near_api.transactions import Transaction, SignedTransaction
 
 
-# should be put in .env once contract deployed
-CONTRACT_ID = "D6qdR9WLs7Nx39iQeWWPr8CMm6fndbtHdP81Koa1CxLx"
-OWNER_ACCOUNT_ID = "ledgerlabhack.testnet"
-PRIVATE_KEY = "ed25519:4a2647HjvDJMPeV6RsoUVQgAn3t8nsgTMbD7BXocmEHUPSgVGYWSHqcCEhuLGwQLXRZozEmq7G5buA7n1yMQs3At"
+
+load_dotenv()
+
+# Access environment variables
+CONTRACT_ID = os.getenv("CONTRACT_ID")
+OWNER_ACCOUNT_ID= os.getenv("OWNER_ACCOUNT_ID ")
+PRIVATE_KEY = os.getenv("PRIVATE_KEY")
+
 
 
 
@@ -74,63 +80,46 @@ def mint_history():
         return jsonify({"status": 500, "success": False, "error": str(e)})
 
 
+
+
+
 @main_bp.route("/mintToken", methods=["POST"])
 def mint_token():
-    try :
+    try:
         data = request.json
         wallet_id = data.get("wallet_id")
         meme_id = str(data.get("meme_id"))
+        #tx_hash = data.get("tx_hash")
 
+        if not all([wallet_id, meme_id]):
+            return jsonify({"status": 400, "error": "Missing required fields"})
 
-        existing_mint = Tokens.query.filter_by(wallet_id=wallet_id, meme_id=meme_id).first()
+        # Check existing mints
+        existing = Tokens.query.filter_by(
+            wallet_id=wallet_id,
+            meme_id=meme_id,
+            status="completed"
+        ).first()
 
-        if existing_mint:
-            return jsonify({"status" : 400 , "success" : False , "error" : 'You have already minted this meme!'})
+        if existing:
+            return jsonify({"status": 400, "error": "Already minted"})
 
-        if not wallet_id or not meme_id:
-            return jsonify({"status" : 400 , "success" : False , "error" : "missing details for transaction"})
+        # # Verify transaction (pseudo-code)
+        # if not verify_transaction(tx_hash, wallet_id, meme_id):
+        #     return jsonify({"status": 400, "error": "Invalid transaction"})
 
-        meme = Meme.query.get(meme_id)
-        if not meme:
-            return jsonify({"status" : 400 , "success" : False , "error" : "reletive meme not found"})
-
-
-        token_name = f"Meme_{meme_id}_Token"
+        # Record in database
         new_token = Tokens(
             meme_id=meme_id,
             wallet_id=wallet_id,
-            token_name=token_name,
-            supply=1,
-            minted_at=datetime.timestamp,
-            status="pending"
+            token_name=f"Meme_{meme_id}_Token",
+            status="completed",
+            minted_at=datetime.now()
         )
         db.session.add(new_token)
         db.session.commit()
 
+        return jsonify({"status": 200, "success": True})
 
-        # NEAR initialization
-        provider = JsonProvider("https://rpc.testnet.near.org")
-        key_pair = KeyPair(PRIVATE_KEY)
-        account = Account(provider, OWNER_ACCOUNT_ID, key_pair)
-
-
-        # call the contracts mint method
-        result = account.function_call(
-            contract_id=CONTRACT_ID,
-            method_name="mint_meme",
-            args={"meme_id": meme_id , "image_cid" : meme.image_cid , "title" : meme.title},
-            amount=0.1
-        )
-
-        new_token.status = "completed"
-        db.session.commit()
-
-        return jsonify({"status" : 200 , "success" : True , "transaction" : result})
-    except Exception as e :
-
-        new_token.status = "failed"
-        db.session.commit()
-
-        return jsonify({"status" : 500 , "success" : False , "error" : str(e)})
-
-
+    except Exception as e:
+        return jsonify({"status": 500, "error": str(e)})

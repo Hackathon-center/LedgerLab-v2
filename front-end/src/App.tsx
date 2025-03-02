@@ -18,12 +18,19 @@ import { setupSender } from "@near-wallet-selector/sender";
 import { setupModal } from "@near-wallet-selector/modal-ui";
 import "@near-wallet-selector/modal-ui/styles.css";
 
+import { Buffer } from "buffer";
+window.Buffer = Buffer;
+
 function App() {
   const [memes, setMemes] = useState<Meme[]>([]);
   const [mintHistory, setMintHistory] = useState<Token[]>([]);
   const [selector, setSelector] = useState<WalletSelector | null>(null);
   const [accountId, setAccountId] = useState<string | null>(null);
   const [modal, setModal] = useState<any>(null);
+
+  useEffect(() => {
+    fetchTrendingMemes();
+  }, []);
 
   useEffect(() => {
     const initializeWalletSelector = async () => {
@@ -46,18 +53,26 @@ function App() {
         setAccountId(state.accounts[0]?.accountId || null);
       });
 
-      //fetchTrendingMemes();
-
       return () => subscription.unsubscribe();
     };
 
     initializeWalletSelector();
   }, []);
 
+  useEffect(() => {
+    if (accountId) {
+      fetchMintHistory(accountId);
+    }
+  }, [accountId]);
+
   const fetchTrendingMemes = async () => {
     try {
       const res = await axios.get("http://localhost:5000/getTrending");
-      setMemes(res.data.data);
+      console.log(res);
+      const Newdata: Meme[] = res.data.data;
+      setMemes(Newdata);
+      console.log("here");
+      console.log(memes);
     } catch (error) {
       console.error("Error fetching memes:", error);
     }
@@ -80,9 +95,12 @@ function App() {
         <Navbar
           accountId={accountId}
           onSignIn={() => modal.show()}
-          onSignOut={() => {
-            modal.hide();
-            window.location.reload();
+          onSignOut={async () => {
+            if (selector) {
+              const wallet = await selector.wallet();
+              await wallet.signOut();
+              window.location.reload();
+            }
           }}
         />
 
@@ -93,6 +111,7 @@ function App() {
               <Dashboard
                 wallet={accountId}
                 memes={memes}
+                selector={selector}
                 mintHistory={mintHistory}
                 onMintSuccess={() => accountId && fetchMintHistory(accountId)}
               />

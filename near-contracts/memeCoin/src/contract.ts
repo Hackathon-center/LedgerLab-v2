@@ -262,71 +262,168 @@
 //   }
 // }
 
-class TokenMetadata {
-  title: string;
-  description: string;
-  media: string;
-  copies: number;
-  issued_at: string | null; // Allow null
-  expires_at: string | null; // Allow null
-  starts_at: string | null; // Allow null
+// class TokenMetadata {
+//   title: string;
+//   description: string;
+//   media: string;
+//   copies: number;
+//   issued_at: string | null; // Allow null
+//   expires_at: string | null; // Allow null
+//   starts_at: string | null; // Allow null
 
-  constructor(title: string, description: string, media: string) {
-    this.title = title;
-    this.description = description;
-    this.media = media;
-    this.copies = 1;
-    this.issued_at = null;
-    this.expires_at = null;
-    this.starts_at = null;
-  }
-}
+//   constructor(title: string, description: string, media: string) {
+//     this.title = title;
+//     this.description = description;
+//     this.media = media;
+//     this.copies = 1;
+//     this.issued_at = null;
+//     this.expires_at = null;
+//     this.starts_at = null;
+//   }
+// }
 
-class Token {
-  token_id: string;
-  owner_id: string;
-  metadata: TokenMetadata;
-  meme_id: number;
-  token_name: string;
-  supply: number;
-  minted_at: bigint;
-  status: string;
+// class Token {
+//   token_id: string;
+//   owner_id: string;
+//   metadata: TokenMetadata;
+//   meme_id: number;
+//   token_name: string;
+//   supply: number;
+//   minted_at: bigint;
+//   status: string;
 
-  constructor(
-    token_id: string,
-    owner_id: string,
-    metadata: TokenMetadata,
-    meme_id: number,
-    token_name: string,
-    supply: number
-  ) {
-    this.token_id = token_id;
-    this.owner_id = owner_id;
-    this.metadata = metadata;
-    this.meme_id = meme_id;
-    this.token_name = token_name;
-    this.supply = supply;
-    this.minted_at = near.blockTimestamp();
-    this.status = "minted";
-  }
-}
+//   constructor(
+//     token_id: string,
+//     owner_id: string,
+//     metadata: TokenMetadata,
+//     meme_id: number,
+//     token_name: string,
+//     supply: number
+//   ) {
+//     this.token_id = token_id;
+//     this.owner_id = owner_id;
+//     this.metadata = metadata;
+//     this.meme_id = meme_id;
+//     this.token_name = token_name;
+//     this.supply = supply;
+//     this.minted_at = near.blockTimestamp();
+//     this.status = "minted";
+//   }
+// }
 
-import { NearBindgen, near, call, view, UnorderedMap } from "near-sdk-js";
+// import { NearBindgen, near, call, view, UnorderedMap } from "near-sdk-js";
+
+// @NearBindgen({})
+// class MemeNFTContract {
+//   tokens_by_id: UnorderedMap<Token>;
+//   tokens_per_owner: UnorderedMap<string[]>;
+//   token_id_counter: number;
+
+//   constructor() {
+//     this.tokens_by_id = new UnorderedMap("tokens_by_id");
+//     this.tokens_per_owner = new UnorderedMap("tokens_per_owner");
+//     this.token_id_counter = 0;
+//   }
+
+//   @call({ payableFunction: true })
+//   mint_meme({
+//     meme_id,
+//     image_cid,
+//     title,
+//   }: {
+//     meme_id: string;
+//     image_cid: string;
+//     title: string;
+//   }) {
+//     const caller = near.predecessorAccountId();
+//     const token_id = (this.token_id_counter++).toString();
+
+//     // Construct TokenMetadata instance
+//     const metadata = new TokenMetadata(
+//       title,
+//       `A trending meme NFT with ID ${meme_id}`,
+//       `https://gateway.ipfs.io/ipfs/${image_cid}`
+//     );
+
+//     const token = new Token(
+//       token_id,
+//       caller,
+//       metadata,
+//       parseInt(meme_id),
+//       `Meme_${meme_id}_Token_for_${caller}`,
+//       1
+//     );
+
+//     // Store token
+//     this.tokens_by_id.set(token_id, token);
+
+//     // Update ownership
+//     const tokens = this.tokens_per_owner.get(caller) || [];
+//     tokens.push(token_id);
+//     this.tokens_per_owner.set(caller, tokens);
+
+//     return {
+//       status: 200,
+//       success: true,
+//       transaction: {
+//         token_id,
+//         meme_id: parseInt(meme_id),
+//         wallet_id: caller,
+//       },
+//     };
+//   }
+
+//   @view({})
+//   get_token({ token_id }: { token_id: string }) {
+//     return this.tokens_by_id.get(token_id) || null;
+//   }
+
+//   @view({})
+//   get_tokens_by_owner({ owner_id }: { owner_id: string }) {
+//     return this.tokens_per_owner.get(owner_id) || [];
+//   }
+// }
+
+import {
+  NearBindgen,
+  near,
+  call,
+  view,
+  initialize,
+  UnorderedMap,
+  LookupMap,
+} from "near-sdk-js";
+import { NFTMetadata, Token, TokenMetadata } from "./metadata"; // Keep your existing types
 
 @NearBindgen({})
 class MemeNFTContract {
+  owner_id: string;
   tokens_by_id: UnorderedMap<Token>;
-  tokens_per_owner: UnorderedMap<string[]>;
+  tokens_per_owner: LookupMap<string[]>;
+  token_metadata_by_id: UnorderedMap<TokenMetadata>;
   token_id_counter: number;
 
   constructor() {
-    this.tokens_by_id = new UnorderedMap("tokens_by_id");
-    this.tokens_per_owner = new UnorderedMap("tokens_per_owner");
+    // Initialize with dummy values
+    this.owner_id = "temp.temp";
+    this.tokens_by_id = new UnorderedMap("tokens_v2");
+    this.tokens_per_owner = new LookupMap("owners_v2");
+    this.token_metadata_by_id = new UnorderedMap("metadata_v2");
+    this.token_id_counter = 0;
+  }
+
+  @initialize({})
+  init({ owner_id }: { owner_id: string }) {
+    // Re-initialize with actual values
+    this.owner_id = owner_id;
+    this.tokens_by_id = new UnorderedMap("tokens_v2");
+    this.tokens_per_owner = new LookupMap("owners_v2");
+    this.token_metadata_by_id = new UnorderedMap("metadata_v2");
     this.token_id_counter = 0;
   }
 
   @call({ payableFunction: true })
-  mint_meme({
+  nft_mint({
     meme_id,
     image_cid,
     title,
@@ -335,51 +432,59 @@ class MemeNFTContract {
     image_cid: string;
     title: string;
   }) {
-    const caller = near.predecessorAccountId();
+    const predecessor = near.predecessorAccountId();
+
     const token_id = (this.token_id_counter++).toString();
 
-    // Construct TokenMetadata instance
+    // Create metadata according to NEP-171 standard
     const metadata = new TokenMetadata(
       title,
       `A trending meme NFT with ID ${meme_id}`,
-      `https://gateway.ipfs.io/ipfs/${image_cid}`
+      `https://ipfs.io/ipfs/${image_cid}`, // Media URL
+      1, // Copies
+      [
+        // Extra attributes
+        { trait_type: "Meme ID", value: meme_id },
+        { trait_type: "Minted At", value: near.blockTimestamp().toString() },
+      ]
     );
 
-    const token = new Token(
-      token_id,
-      caller,
-      metadata,
-      parseInt(meme_id),
-      `Meme_${meme_id}_Token_for_${caller}`,
-      1
-    );
+    // Create token
+    const token = new Token(token_id, predecessor, predecessor, metadata);
 
-    // Store token
+    // Store data
     this.tokens_by_id.set(token_id, token);
+    this.token_metadata_by_id.set(token_id, metadata);
 
-    // Update ownership
-    const tokens = this.tokens_per_owner.get(caller) || [];
-    tokens.push(token_id);
-    this.tokens_per_owner.set(caller, tokens);
+    // Update owner's token list
+    let owner_tokens = this.tokens_per_owner.get(predecessor) || [];
+    owner_tokens.push(token_id);
+    this.tokens_per_owner.set(predecessor, owner_tokens);
 
+    // Emit mint event (NEP-297 standard)
+    near.log(`EVENT_JSON:{"standard":"nep171","version":"1.0.0","event":"nft_mint","data":[
+      {"owner_id":"${predecessor}","token_ids":["${token_id}"]}
+    ]}`);
+
+    return token;
+  }
+
+  // Required NEP-171 methods
+  @view({})
+  nft_token({ token_id }: { token_id: string }): Token | null {
+    return this.tokens_by_id.get(token_id);
+  }
+
+  @view({})
+  nft_metadata(): NFTMetadata {
     return {
-      status: 200,
-      success: true,
-      transaction: {
-        token_id,
-        meme_id: parseInt(meme_id),
-        wallet_id: caller,
-      },
+      spec: "nft-1.0.0",
+      name: "MemeNFT",
+      symbol: "MEME",
+      icon: null,
+      base_uri: null,
+      reference: null,
+      reference_hash: null,
     };
-  }
-
-  @view({})
-  get_token({ token_id }: { token_id: string }) {
-    return this.tokens_by_id.get(token_id) || null;
-  }
-
-  @view({})
-  get_tokens_by_owner({ owner_id }: { owner_id: string }) {
-    return this.tokens_per_owner.get(owner_id) || [];
   }
 }

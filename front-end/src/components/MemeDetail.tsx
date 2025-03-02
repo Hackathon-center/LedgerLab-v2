@@ -37,7 +37,7 @@ const MemeDetail = () => {
           <h1 className="text-3xl font-bold mb-4">{meme.title}</h1>
           <div className="grid grid-cols-2 gap-4 text-gray-600">
             <p>Created: {new Date(meme.created_at).toLocaleDateString()}</p>
-            <p>Upvotes: {meme.up_vote}</p>
+            <p>Upvotes: {meme.upvotes}</p>
             <p>Comments: {meme.comments}</p>
           </div>
         </div>

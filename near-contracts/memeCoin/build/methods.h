@@ -1,3 +1,4 @@
-DEFINE_NEAR_METHOD(get_token)
-DEFINE_NEAR_METHOD(get_tokens_by_owner)
-DEFINE_NEAR_METHOD(mint_meme)
+DEFINE_NEAR_METHOD(init)
+DEFINE_NEAR_METHOD(nft_metadata)
+DEFINE_NEAR_METHOD(nft_mint)
+DEFINE_NEAR_METHOD(nft_token)

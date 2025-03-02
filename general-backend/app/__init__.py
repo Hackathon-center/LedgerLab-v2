@@ -9,6 +9,8 @@ load_dotenv()
 
 db = SQLAlchemy()
 
+
+
 def create_app():
     app = Flask(__name__)
     CORS(app)

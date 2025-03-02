@@ -1,5 +1,6 @@
 import MemeCard from "./MemeCard";
 import { Meme, Token } from "../utils";
+import { WalletSelector } from "@near-wallet-selector/core";
 
 // components/Dashboard.tsx
 export default function Dashboard({
@@ -7,11 +8,14 @@ export default function Dashboard({
   memes,
   mintHistory,
   onMintSuccess,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  selector,
 }: {
   wallet: string | null;
   memes: Meme[];
   mintHistory: Token[];
   onMintSuccess: () => void;
+  selector: WalletSelector | null;
 }) {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -22,8 +26,8 @@ export default function Dashboard({
             Trending Memes
           </h2>
           <div className="grid grid-cols-1 gap-6">
-            {mintHistory.length === 0 ? (
-              <p className="text-gray-500">No mint history found</p>
+            {memes.length === 0 ? (
+              <p className="text-gray-500">No memes found</p>
             ) : (
               <>
                 {memes.map((meme) => (
@@ -33,6 +37,7 @@ export default function Dashboard({
                     wallet={wallet}
                     mintHistory={mintHistory}
                     onMintSuccess={onMintSuccess}
+                    selector={selector}
                   />
                 ))}
               </>
